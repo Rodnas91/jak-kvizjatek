@@ -142,9 +142,13 @@ function showQuestion() {
     // Töröljük a régi válasz gombokat és a visszajelzést
     resetState();
 
+    // Krisztián fejlesztése: Kérdés X / Y számláló hozzáadása
+    const questionNumberElement = document.getElementById("question-number");
+    questionNumberElement.textContent = `Kérdés ${currentQuestionIndex + 1} / ${questions.length}`;
+
     let currentQuestion = questions[currentQuestionIndex];
-    let questionNo = currentQuestionIndex + 1;
-    questionElement.textContent = `${questionNo}. ${currentQuestion.question}`;
+    // Krisztián: Az eredeti számozást kivesszük, mert már van külön "Kérdés X / Y" számláló
+    questionElement.textContent = currentQuestion.question;
 
     // Létrehozzuk a válasz gombokat
     currentQuestion.answers.forEach(answer => {
