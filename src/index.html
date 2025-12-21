@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szuper Kvízjáték</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="quiz-container">
+        <h1>Szuper Kvízjáték</h1>
+
+        <div id="start-screen">
+            <label for="player-name">Kérlek írd be a neved:</label>
+            <input type="text" id="player-name" placeholder="Írd be a nevedet ide" />
+            <button id="start-button">Kvíz Indítása</button>
+        </div>
+        
+        <div id="quiz-content" style="display: none;">
+            <p id="question-text">Itt jelenik meg a kérdés szövege.</p>
+            
+            <div id="answer-buttons">
+                </div>
+
+            <div id="controls">
+                <p>Pontszám: <span id="score">0</span></p>
+                <button id="next-button">Következő Kérdés</button>
+            </div>
+            
+            <p id="feedback"></p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
