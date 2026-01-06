@@ -1,0 +1,12 @@
+# Node modules
+node_modules/
+
+# macOS system files
+.DS_Store
+
+# IDE files
+.idea/
+.vscode/
+
+# ZIP files by accident
+*.zip
