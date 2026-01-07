@@ -38,7 +38,7 @@ const questions = [
         ]
     },
     {
-        question: "Hány megyéje van Magyarországnak?",
+        question: "Hány vármegyéje van Magyarországnak?",
         answers: [
             { text: "23", correct: false },
             { text: "7", correct: false },
@@ -47,7 +47,7 @@ const questions = [
         ]
     },
     {
-        question: "Melyik város NEM megyeszékhely?",
+        question: "Melyik város NEM vármegyeszékhely?",
         answers: [
             { text: "Tatabánya", correct: false },
             { text: "Komárom", correct: true },
