@@ -1,16 +1,24 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #f4f4f9; /* Alap háttérszín, ha a kép nem tölt be */
     color: #333;
     display: flex;
-    justify-content: center; /* Vízszintes középre igazítás */
-    align-items: center; /* Függőleges középre igazítás */
-    min-height: 100vh; /* Teljes képernyő magasság */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     margin: 0;
+
+    /* --- EZEK AZ ÚJ RÉSZEK A HÁTTÉRKÉPHEZ --- */
+    background-image: url('images/Magyarorszag.png'); /* A képfájl elérési útja */
+    background-size: cover; /* A képet úgy méretezi, hogy lefedje a teljes területet */
+    background-position: center; /* A képet középre igazítja */
+    background-repeat: no-repeat; /* Megakadályozza a kép ismétlődését */
+    background-attachment: fixed; /* A háttérkép fix marad görgetéskor */
+    /* ------------------------------------------ */
 }
 
 #quiz-container {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9); /* Átlátszó fehér háttér, hogy látszódjon a kép mögötte */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
