@@ -8,5 +8,8 @@ node_modules/
 .idea/
 .vscode/
 
+# Word dokumentumok
+docs/*.docx
+
 # ZIP files by accident
 *.zip

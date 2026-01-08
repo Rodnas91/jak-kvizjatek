@@ -11,6 +11,9 @@
     "test": "jest",
     "docs": "jsdoc -c jsdoc.json"
   },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Rodnas91/jak-kvizjatek.git"
