@@ -1,4 +1,15 @@
+# Node modules
 node_modules/
-.idea/
+
+# macOS system files
 .DS_Store
+
+# IDE files
+.idea/
+.vscode/
+
+# Word dokumentumok
 docs/*.docx
+
+# ZIP files by accident
+*.zip

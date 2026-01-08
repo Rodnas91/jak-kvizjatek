@@ -1,0 +1,20 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# IntelliJ / WebStorm project files
+.idea/
+
+# OS szemétfájlok
+.DS_Store
+
+# DOCX dokumentumok
+*.docx
+node_modules/
+*.zip
+.DS_Store
+.idea/

@@ -1,4 +1,15 @@
-// 1. A Kérdések Adatbázisa
+/**
+ * Kvízjáték fő logikája.
+ * A fájl támogatja a böngészős futást és a Jest teszteket is.
+ */
+
+// Tesztkörnyezet detektálása (Jest futtatáskor true)
+const isTest = typeof module !== "undefined" && module.exports;
+
+/**
+ * A kvízkérdések adatbázisa
+ * @type {Question[]}
+ */
 const questions = [
     {
         question: "Mi Magyarország fővárosa?",
@@ -47,27 +58,34 @@ const questions = [
     }
 ];
 
-// 2. Játékállapot változók
+// -----------------------------------------------------------
+// 2. JÁTÉK ÁLLAPOT VÁLTOZÓK
+// -----------------------------------------------------------
+
 let currentQuestionIndex = 0;
 let score = 0;
 let playerName = "";
 
-// ===============================================================
-// 3. DOM inicializáló függvény – csak böngészőben fut
-// ===============================================================
-function initDOM() {
-    const startScreen = document.getElementById("start-screen");
-    const quizContent = document.getElementById("quiz-content");
-    const playerNameInput = document.getElementById("player-name");
-    const startButton = document.getElementById("start-button");
+// -----------------------------------------------------------
+// 3. DOM LEKÉRÉS CSAK BÖNGÉSZŐBEN
+// -----------------------------------------------------------
 
-    const questionElement = document.getElementById("question-text");
-    const answerButtonsElement = document.getElementById("answer-buttons");
-    const nextButton = document.getElementById("next-button");
-    const scoreElement = document.getElementById("score");
-    const feedbackElement = document.getElementById("feedback");
+let startScreen, quizContent, playerNameInput, startButton;
+let questionElement, answerButtonsElement, nextButton, scoreElement, feedbackElement;
 
-    // START gomb logika
+if (!isTest) {
+    startScreen = document.getElementById("start-screen");
+    quizContent = document.getElementById("quiz-content");
+    playerNameInput = document.getElementById("player-name");
+    startButton = document.getElementById("start-button");
+
+    questionElement = document.getElementById("question-text");
+    answerButtonsElement = document.getElementById("answer-buttons");
+    nextButton = document.getElementById("next-button");
+    scoreElement = document.getElementById("score");
+    feedbackElement = document.getElementById("feedback");
+
+    // Start gomb esemény
     startButton.addEventListener("click", () => {
         playerName = playerNameInput.value.trim();
         if (playerName === "") {
@@ -79,119 +97,114 @@ function initDOM() {
         quizContent.style.display = "block";
         startQuiz();
     });
+}
 
-    // A kvíz indítása
-    function startQuiz() {
-        currentQuestionIndex = 0;
-        score = 0;
-        scoreElement.textContent = score;
-        nextButton.style.display = "none";
-        feedbackElement.textContent = "";
+// -----------------------------------------------------------
+// 4. JÁTÉK LOGIKA – TESZTBIZTOS
+// -----------------------------------------------------------
 
-        nextButton.removeEventListener("click", startQuiz);
-        nextButton.addEventListener("click", handleNextButton);
-        nextButton.textContent = "Következő Kérdés";
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    scoreElement.textContent = String(score);
 
+    nextButton.style.display = "none";
+    feedbackElement.textContent = "";
+
+    nextButton.removeEventListener("click", startQuiz);
+    nextButton.addEventListener("click", handleNextButton);
+    nextButton.textContent = "Következő Kérdés";
+
+    showQuestion();
+}
+
+function showQuestion() {
+    resetState();
+
+    // 🔵 **Kérdés sorszámozása (a TE feladatod!)**
+    const questionNumberElement = document.getElementById("question-number");
+    if (questionNumberElement) {
+        questionNumberElement.textContent =
+            `Kérdés ${currentQuestionIndex + 1} / ${questions.length}`;
+    }
+
+    const currentQuestion = questions[currentQuestionIndex];
+    questionElement.textContent = currentQuestion.question;
+
+    currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.textContent = answer.text;
+        button.classList.add("btn");
+
+        if (answer.correct) button.dataset.correct = "true";
+
+        button.addEventListener("click", selectAnswer);
+        answerButtonsElement.appendChild(button);
+    });
+}
+
+function resetState() {
+    while (answerButtonsElement.firstChild) {
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+    }
+    nextButton.style.display = "none";
+    feedbackElement.textContent = "";
+}
+
+function selectAnswer(e) {
+    const selectedBtn = e.target;
+    const correct = selectedBtn.dataset.correct === "true";
+
+    if (correct) {
+        selectedBtn.classList.add("correct");
+        score++;
+        scoreElement.textContent = String(score);
+        feedbackElement.textContent = "Helyes! ✅";
+    } else {
+        selectedBtn.classList.add("incorrect");
+        feedbackElement.textContent = "Helytelen. ❌";
+    }
+
+    Array.from(answerButtonsElement.children).forEach(button => {
+        if (button.dataset.correct === "true") button.classList.add("correct");
+        button.disabled = true;
+    });
+
+    nextButton.style.display = "block";
+}
+
+function handleNextButton() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
         showQuestion();
-    }
-
-    function showQuestion() {
-        resetState();
-
-        // ----------------------------------------------------------
-        // Kérdéssorszámozás módosítása – Pusztai Krisztián
-        // ----------------------------------------------------------
-        const currentQuestion = questions[currentQuestionIndex];
-        const questionNo = currentQuestionIndex + 1;
-        questionElement.textContent = `${questionNo}. ${currentQuestion.question}`;
-
-        currentQuestion.answers.forEach(answer => {
-            const button = document.createElement("button");
-            button.textContent = answer.text;
-            button.classList.add("btn");
-
-            if (answer.correct) {
-                button.dataset.correct = "true";
-            }
-
-            button.addEventListener("click", selectAnswer);
-            answerButtonsElement.appendChild(button);
-        });
-    }
-
-    function resetState() {
-        while (answerButtonsElement.firstChild) {
-            answerButtonsElement.removeChild(answerButtonsElement.firstChild);
-        }
-        nextButton.style.display = "none";
-        feedbackElement.textContent = "";
-    }
-
-    function selectAnswer(e) {
-        const selectedBtn = e.target;
-        const isCorrect = selectedBtn.dataset.correct === "true";
-
-        if (isCorrect) {
-            selectedBtn.classList.add("correct");
-            score++;
-            scoreElement.textContent = score;
-            feedbackElement.textContent = "Helyes! ✅";
-        } else {
-            selectedBtn.classList.add("incorrect");
-            feedbackElement.textContent = "Helytelen. ❌";
-        }
-
-        Array.from(answerButtonsElement.children).forEach(button => {
-            if (button.dataset.correct === "true") {
-                button.classList.add("correct");
-            }
-            button.disabled = true;
-        });
-
-        nextButton.style.display = "block";
-    }
-
-    function handleNextButton() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-            showQuestion();
-        } else {
-            showScore();
-        }
-    }
-
-    function showScore() {
-        resetState();
-        questionElement.textContent =
-            `${playerName}, a játék vége! Elért pontszám: ${score} / ${questions.length}`;
-
-        feedbackElement.textContent = "Gratulálunk a részvételhez! 🎉";
-
-        nextButton.textContent = "Újra Kezdés";
-        nextButton.style.display = "block";
-
-        nextButton.removeEventListener("click", handleNextButton);
-
-        nextButton.addEventListener("click", () => {
-            quizContent.style.display = "none";
-            startScreen.style.display = "block";
-            playerNameInput.value = "";
-        });
+    } else {
+        showScore();
     }
 }
 
-// ===============================================================
-// 4. DOM inicializáció csak BÖNGÉSZŐBEN (teszt alatt nem fut!)
-// ===============================================================
+function showScore() {
+    resetState();
 
-// Csak böngészőben fusson le, teszt alatt SOHA
-if (typeof window !== "undefined" && typeof document !== "undefined" && !(typeof module !== "undefined" && module.exports)) {
-    initDOM();
+    questionElement.textContent =
+        `${playerName}, a játék vége! Elért pontszám: ${score} / ${questions.length}`;
+
+    feedbackElement.textContent = "Gratulálunk a részvételhez! 🎉";
+
+    nextButton.textContent = "Újra Kezdés";
+    nextButton.style.display = "block";
+
+    nextButton.removeEventListener("click", handleNextButton);
+    nextButton.addEventListener("click", () => {
+        quizContent.style.display = "none";
+        startScreen.style.display = "block";
+        playerNameInput.value = "";
+    });
 }
 
-// ===============================================================
-// 5. Export a Jest tesztekhez
-// ===============================================================
-if (typeof module !== "undefined" && module.exports) {
+// -----------------------------------------------------------
+// 5. EXPORT TESZTEKHEZ
+// -----------------------------------------------------------
+
+if (isTest) {
     module.exports = { questions };
 }
